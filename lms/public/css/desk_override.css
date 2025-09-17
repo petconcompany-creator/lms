@@ -1,0 +1,175 @@
+/* === PETCON: flowing gold/black gradient + high-contrast foreground === */
+
+/* Let the gradient show through */
+html, body {
+  position: relative;
+  z-index: 0;
+  background: transparent !important;
+  color: #ffffff !important;                /* Force white text globally */
+  text-rendering: optimizeLegibility;
+}
+
+/* Animated gradient backdrop (always ON) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;                                /* under content */
+  pointer-events: none;
+  background: linear-gradient(-45deg, #FFD700, #B8860B, #000000, #2F2F2F);
+  background-size: 400% 400%;
+  animation: petcon-flow 12s ease infinite;
+}
+
+/* Put all app content above the gradient and keep it transparent */
+body .desk-container,
+body .container.page-body,
+body .page-container,
+body .layout-main,
+body .layout-main-section,
+body .layout-main-section-wrapper,
+body .page-head,
+body .navbar,
+body #page-desktop,
+body .page-content,
+body .page-wrapper,
+body .container {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ---- Single palette (applies to both themes) ---- */
+:root {
+  --text: #f8fafc;                           /* near-white */
+  --text-muted: rgba(255,255,255,0.75);
+  --link: #a5d8ff;                           /* cyan for contrast on gold */
+  --link-hover: #d0ebff;
+
+  --card-bg: rgba(0,0,0,0.35);               /* dark glass */
+  --card-bg-strong: rgba(0,0,0,0.45);
+  --card-border: rgba(255,255,255,0.22);
+
+  --pill-bg: rgba(0,0,0,0.45);
+  --pill-text: #ffffff;
+
+  --chart-axis: rgba(255,255,255,0.80);
+  --chart-grid: rgba(255,255,255,0.18);
+}
+
+/* Global text + subtle shadow for gold areas */
+html, body { color: var(--text) !important; }
+.page-content, .desk-container, .layout-main-section { color: var(--text) !important; }
+
+h1, h2, h3, h4, h5, h6,
+.page-title, .widget-title, .section-title,
+.form-section .section-head, .filter-title {
+  color: var(--text) !important;
+  text-shadow: 0 0.5px 0 rgba(0,0,0,0.25);
+}
+
+.text-muted, .muted-text, .sub-heading,
+.form-text, .help, .description,
+.frappe-timestamp, .stat-datetime {
+  color: var(--text-muted) !important;
+}
+
+/* Links (high contrast on gold) */
+a, .btn-link { color: var(--link) !important; }
+a:hover, .btn-link:hover { color: var(--link-hover) !important; }
+
+/* Cards / widgets (dark glass) */
+.card, .frappe-card, .common-card-style,
+.widget, .widget.number, .widget.shortcut-widget,
+.page-card, .form-dashboard-section .card,
+.form-section, .modal-content, .list-card,
+.lesson-content-card, .stats-card {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: saturate(130%) blur(6px);
+}
+
+/* Heavier glass where needed (add class="glass-strong" to specific blocks) */
+.glass-strong {
+  background: var(--card-bg-strong) !important;
+}
+
+/* Pills / chips */
+.badge, .indicator-pill, .pill, .stat-pill, .count {
+  background: var(--pill-bg) !important;
+  color: var(--pill-text) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* Inputs */
+input, select, textarea,
+.form-control, .control-input, .control-value,
+.awesomplete > input,
+.search-bar .input-with-feedback {
+  background: rgba(0,0,0,0.30) !important;
+  color: var(--text) !important;
+  border-color: var(--card-border) !important;
+}
+::placeholder { color: var(--text-muted) !important; }
+
+/* Icons/SVG inherit currentColor */
+svg, .icon, .fa, .fa-solid, .fa-regular, .fa-brands {
+  color: currentColor !important;
+  fill: currentColor !important;
+}
+
+/* Charts: containers take card style */
+.frappe-chart, .chart-container, .dashboard-graph, .graph {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* Remove stray overlays that add flat tints */
+.page-container::before,
+.layout-main-section::before,
+.page-head::before,
+.navbar::before { background: transparent !important; }
+
+/* Gradient animation */
+@keyframes petcon-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* === Reveal animations (kept) === */
+.petcon-will-reveal {
+  opacity: 0 !important;
+  transform: translateY(16px) scale(0.98);
+  filter: blur(6px);
+  will-change: transform, opacity, filter;
+}
+.petcon-enter {
+  animation: petcon-pop 600ms cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: calc(var(--d, 0) * 60ms);
+}
+@keyframes petcon-pop {
+  0%   { opacity:0; transform: translateY(16px) scale(0.98); filter: blur(6px); }
+  60%  { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+  100% { opacity:1; transform:none; filter:none; }
+}
+.petcon-enter.slide-left  { animation-name: petcon-slide-left; }
+.petcon-enter.slide-right { animation-name: petcon-slide-right; }
+@keyframes petcon-slide-left  { 0% {opacity:0; transform:translateX(-24px);} 100% {opacity:1; transform:none;} }
+@keyframes petcon-slide-right { 0% {opacity:0; transform:translateX(24px);}  100% {opacity:1; transform:none;} }
+
+/* Inline icon helper */
+.petcon-icon { display: inline-flex; align-items: center; gap: 8px; }
+.petcon-icon > svg { width: 16px; height: 16px; flex: 0 0 16px; opacity:.9; }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+  .petcon-will-reveal, .petcon-enter {
+    animation: none !important; opacity: 1 !important; filter: none !important;
+  }
+}
