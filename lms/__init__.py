@@ -1,4 +1,5 @@
-__version__ = "2.33.0"
+<<<<<<< HEAD
+__version__ = "2.34.1"
 #!/bin/bash
 
 # Make Node in PATH early (keeps your original env behavior)
@@ -75,3 +76,6 @@ petcon_autobuild
 
 # Start bench
 exec bench start
+=======
+__version__ = "2.34.1"
+>>>>>>> e16cecd149cc11ec82d98432d10236bde7a90389
