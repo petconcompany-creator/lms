@@ -23,7 +23,10 @@ services:
       - SHELL=/bin/bash
     working_dir: /home/frappe
     volumes:
-      - .:/workspace
+      - .:/workspace                     # existing workspace mount
+      - ./lms:/home/frappe/frappe-bench/apps/lms   # ✅ mount whole app 
+      - ./frappe-bench:/home/frappe/frappe-bench        # ✅ mount the whole bench
+
     ports:
       - 8000:8000
       - 9000:9000
